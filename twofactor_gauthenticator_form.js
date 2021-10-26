@@ -28,7 +28,11 @@ if (window.rcmail) {
 		text += '<tr>';
 		text += '<td class="title" colspan="2"><br /><label for="remember_2FA"><input type="checkbox" id="remember_2FA" name="_remember_2FA" value="yes" /> '+rcmail.gettext('dont_ask_me_30days', 'twofactor_gauthenticator')+'</label><hr /></td>';
 		text += '</tr>';
-	}
+	} else {
+        text += '<tr>';
+        text += '<td class="title" colspan="2"><hr /></td>';
+        text += '</tr>';
+    }
 
     // create textbox
     $('form > table > tbody:last').append(text);

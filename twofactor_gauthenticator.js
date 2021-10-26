@@ -95,6 +95,7 @@ if (window.rcmail) {
 				if(data === rcmail.gettext('code_ok', 'twofactor_gauthenticator')) {
 					$('#2FA_setup_fields').prev().removeAttr('disabled');
 				}
+				$('#2FA_code_to_check').val('');
 			});
 		}
 
