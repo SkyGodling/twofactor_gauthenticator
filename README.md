@@ -14,6 +14,10 @@ Roundcube Mail plugin: 2-Factor Authentication
 
 ![2Steps](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_003.png)
 
+## NOTES
+- before you save the generated secret key, make sure you tested it using the "Test the generated PIN here"
+- If you keep getting "incorrect code", meaning your PC time and the server time is not the same.
+
 ---
 
 2Steps verification

@@ -349,7 +349,7 @@ class twofactor_gauthenticator extends rcube_plugin
                             <div class="col-md-4">
                                 <p>Test the generated PIN here: (Server Time: '.date('d M Y g:i:s').')</p>
                                 <div class="input-group mb-3">
-                                  <input type="text" class="form-control" id="2FA_code_to_check" maxlength="10" aria-describedby="button-addon2">
+                                  <input type="text" class="form-control" id="2FA_code_to_check" maxlength="6" aria-describedby="button-addon2">
                                   <div class="input-group-append">
                                     <button class="btn btn-outline-secondary mainaction button" type="button" id="2FA_check_code" id="button-addon2">'.$this->gettext('check_code').'</button>
                                   </div>
