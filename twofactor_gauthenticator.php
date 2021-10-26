@@ -15,36 +15,53 @@ require_once 'PHPGangsta/GoogleAuthenticator.php';
 
 require_once 'CIDR.php';
 
+/**
+ * Class twofactor_gauthenticator
+ */
 class twofactor_gauthenticator extends rcube_plugin 
 {
+    /**
+     * @var int
+     */
 	private $_number_recovery_codes = 4;
 
-        // relative from RC home dir, not plugin directory
-        private $_logs_file = '/logs/log_errors_2FA.txt';
-	
+    /**
+     * relative from RC home dir, not plugin directory
+     * @var string
+     */
+    private $_logs_file = '/logs/log_errors_2FA.txt';
+
+    /**
+     * @var bool|null
+     */
+    private $isExcluded2FA;
+
+    /**
+     * @var bool|null
+     */
+    private $isAllowed2FA;
+
+    /**
+     * @return false|void
+     */
     function init() 
     {
 		$rcmail = rcmail::get_instance();
+
+        $allowedPlugin = $this->__pluginAllowedByConfig();
+        // skipping all logic and plugin not appears
+        if(!$allowedPlugin) {
+            return false;
+        }
     	    	 
 		// hooks
     	$this->add_hook('login_after', array($this, 'login_after'));
     	$this->add_hook('send_page', array($this, 'check_2FAlogin'));
     	$this->add_hook('render_page', array($this, 'popup_msg_enrollment'));
-    	    	 
-    	$this->load_config();
-		
-		$allowedPlugin = $this->__pluginAllowedByConfig();
-		// skipping all logic and plugin not appears
-		if(!$allowedPlugin) {
-			return false;
-		}
 
-		$excludedUserIn2FA = $this->__pluginExclude2FA();
-        // if the config that the user is excluded, then disable this plugin
-		if ($excludedUserIn2FA) {
-		    return false;
-        }
-    	 
+    	// load config
+    	$this->load_config();
+
 		$this->add_texts('localization/', true);
 		
 		// check code with ajax
@@ -63,11 +80,18 @@ class twofactor_gauthenticator extends rcube_plugin
 			$this->api->output->set_env('twofactor_formfield_as_password',$rcmail->config->get('twofactor_formfield_as_password',false));
 		}
     }
-	
-	// check if user are valid from config.inc.php or true (by default) if config.inc.php not exists
+
+    /**
+     * check if user are valid from config.inc.php or true (by default) if config.inc.php not exists
+     * @return bool
+     */
 	function __pluginAllowedByConfig() {
+
+        if (isset($this->isAllowed2FA) && !is_null($this->isAllowed2FA)) {
+            return $this->isAllowed2FA;
+        }
+
 		$rcmail = rcmail::get_instance();
-    	    	 
 		$this->load_config();
 
 		// users allowed to use plugin (not showed for others!).
@@ -95,46 +119,58 @@ class twofactor_gauthenticator extends rcube_plugin
      * I want it enforce to all but exclude few such as used in our enterprise system
      * -- camilo3rd
      */
-	function __pluginExclude2FA() {
-        $rcmail = rcmail::get_instance();
+	function __pluginExcludeEnforce2FA() {
 
+	    if (isset($this->isExcluded2FA) && !is_null($this->isExcluded2FA)) {
+            return $this->isExcluded2FA;
+        }
+
+        $rcmail = rcmail::get_instance();
         $this->load_config();
 
         // users allowed to use plugin (not showed for others!).
         //	-- From config.inc.php file.
         //  -- You can use regexp: admin.*@domain.com
-        $users = $rcmail->config->get('users_excluded_2FA');
+        $users = $rcmail->config->get('users_excluded_enforce_2FA');
         if(is_array($users)) {		// exists "users" from config.inc.php
+
+            // enforce 2FA to this user
+            $this->isExcluded2FA = false;
+
             foreach($users as $u) {
                 preg_match("/$u/", $rcmail->user->data['username'], $matches);
 
-                if(isset($matches[0])) {
+                if(isset($matches[0]) || $rcmail->user->data['username'] === $u) {
                     // if matched, users will not 2FA
-                    return true;
+                    $this->isExcluded2FA = true;
                 }
             }
 
-            // enforce 2FA to this user
-            return false;
+            return $this->isExcluded2FA;
         }
 
         // by default, all users have plugin activated
         return null;
     }
 
-    
-    // Use the form login, but removing inputs with jquery and action (see twofactor_gauthenticator_form.js)
+
+    /**
+     * Use the form login, but removing inputs with jquery and action (see twofactor_gauthenticator_form.js)
+     * @param $args
+     */
     function login_after($args)
     {
 		$_SESSION['twofactor_gauthenticator_login'] = time();
 		
 		$rcmail = rcmail::get_instance();
-		
-		
-		$config_2FA = self::__get2FAconfig();
+
+        // if the config that the user is excluded, then disable this plugin
+		$excludedUserInEnforce2FA = $this->__pluginExcludeEnforce2FA();
+
+        $config_2FA = self::__get2FAconfig();
 		if(!$config_2FA['activate'])
 		{
-			if($rcmail->config->get('force_enrollment_users'))
+			if($rcmail->config->get('force_enrollment_users') && !$excludedUserInEnforce2FA)
 			{
 				$this->__goingRoundcubeTask('settings', 'plugin.twofactor_gauthenticator');				
 			}
@@ -154,13 +190,19 @@ class twofactor_gauthenticator extends rcube_plugin
     	
     	$rcmail->output->send('login');
     }
-    
-	// capture webpage if someone try to use ?_task=mail|addressbook|settings|... and check auth code
+
+    /**
+     * capture webpage if someone try to use ?_task=mail|addressbook|settings|... and check auth code
+     * @param $p
+     * @return mixed
+     */
 	function check_2FAlogin($p)
 	{
 		$rcmail = rcmail::get_instance();
 		$config_2FA = self::__get2FAconfig();
 
+        // if the config that the user is excluded, then disable this plugin
+        $excludedUserInEnforce2FA = $this->__pluginExcludeEnforce2FA();
 		
 		if($config_2FA['activate'])
 		{
@@ -173,7 +215,6 @@ class twofactor_gauthenticator extends rcube_plugin
                             }
                     }
             }
-
 
 			$code = rcube_utils::get_input_value('_code_2FA', rcube_utils::INPUT_POST);
 			$remember = rcube_utils::get_input_value('_remember_2FA', rcube_utils::INPUT_POST);
@@ -206,10 +247,11 @@ class twofactor_gauthenticator extends rcube_plugin
 			{
 				$this->__exitSession();
 			}
-			
 		}
-		elseif($rcmail->config->get('force_enrollment_users') && ($rcmail->task !== 'settings' || $rcmail->action !== 'plugin.twofactor_gauthenticator'))	
-		{
+		elseif(
+		    $rcmail->config->get('force_enrollment_users') && !$excludedUserInEnforce2FA &&
+            ($rcmail->task !== 'settings' || $rcmail->action !== 'plugin.twofactor_gauthenticator')
+        ) {
 			if($rcmail->task !== 'login')	// resolve some redirection loop with logout
 			{
 				$this->__goingRoundcubeTask('settings', 'plugin.twofactor_gauthenticator');
@@ -218,17 +260,22 @@ class twofactor_gauthenticator extends rcube_plugin
 
 		return $p;
 	}
-	
-	
-	// ripped from new_user_dialog plugin
+
+
+    /**
+     * ripped from new_user_dialog plugin
+     */
 	function popup_msg_enrollment()
 	{
 		$rcmail = rcmail::get_instance();
 		$config_2FA = self::__get2FAconfig();
+        $excludedUserInEnforce2FA = $this->__pluginExcludeEnforce2FA();
 		
-		if(!$config_2FA['activate'] 
-			&& $rcmail->config->get('force_enrollment_users') && $rcmail->task == 'settings' && $rcmail->action == 'plugin.twofactor_gauthenticator')
-		{
+		if (
+		    !$config_2FA['activate'] && $rcmail->config->get('force_enrollment_users') &&
+            $rcmail->task == 'settings' && $rcmail->action == 'plugin.twofactor_gauthenticator' &&
+            !$excludedUserInEnforce2FA
+        ) {
 			// add overlay input box to html page
 			$rcmail->output->add_footer(html::tag('form', array(
 					'id' => 'enrollment_dialog',
@@ -242,9 +289,11 @@ class twofactor_gauthenticator extends rcube_plugin
 			);
 		}		
 	}
-	
 
-	// show config
+
+    /**
+     * show config
+     */
     function twofactor_gauthenticator_init() 
     {
         $rcmail = rcmail::get_instance();
@@ -304,12 +353,12 @@ class twofactor_gauthenticator extends rcube_plugin
 
         // Activate/deactivate
         $field_id = '2FA_activate';
-        $checkbox_activate = new html_checkbox([
+        $checkbox_activate = new html_checkbox(array(
             'name' => $field_id,
             'id' => $field_id,
             'type' => 'checkbox',
             'class' => 'form-check-input'
-        ]);
+        ));
         $table->add('title', html::label($field_id, rcube::Q($this->gettext('activate'))));
 		$checked = $data['activate'] ? null: 1; // :-?
         $table->add(null, $checkbox_activate->show( $checked )); 
@@ -317,7 +366,7 @@ class twofactor_gauthenticator extends rcube_plugin
         
         // secret
         $field_id = '2FA_secret';
-	    $input_descsecret = new html_inputfield([
+	    $input_descsecret = new html_inputfield(array(
 	        'name' => $field_id,
             'id' => $field_id,
             'size' => 60,
@@ -325,7 +374,7 @@ class twofactor_gauthenticator extends rcube_plugin
             'value' => $data['secret'],
             'autocomplete' => 'new-password',
             'class' => 'form-control'
-        ]);
+        ));
         $table->add('title', html::label($field_id, rcube::Q($this->gettext('secret'))));
         $html_secret = '<div class="input-group mb-3">'.$input_descsecret->show().'<div class="input-group-append">';
         if($data['secret'])
@@ -541,56 +590,56 @@ class twofactor_gauthenticator extends rcube_plugin
 
 
 	// remember option by https://github.com/corrideat/ 
-        private function __cookie($set = TRUE) {
-                $rcmail = rcmail::get_instance();
-                $user_agent = hash_hmac('md5', filter_input(INPUT_SERVER, 'USER_AGENT') ?: "\0\0\0\0\0", $rcmail->config->get('des_key'));
-                $key = hash_hmac('sha256', implode("\2\1\2", array($rcmail->user->data['username'], $this->__getSecret())), $rcmail->config->get('des_key'), TRUE);
-                $iv = hash_hmac('md5', implode("\3\2\3", array($rcmail->user->data['username'], $this->__getSecret())), $rcmail->config->get('des_key'), TRUE);
-                $name = hash_hmac('md5', $rcmail->user->data['username'], $rcmail->config->get('des_key'));
+    private function __cookie($set = TRUE) {
+            $rcmail = rcmail::get_instance();
+            $user_agent = hash_hmac('md5', filter_input(INPUT_SERVER, 'USER_AGENT') ?: "\0\0\0\0\0", $rcmail->config->get('des_key'));
+            $key = hash_hmac('sha256', implode("\2\1\2", array($rcmail->user->data['username'], $this->__getSecret())), $rcmail->config->get('des_key'), TRUE);
+            $iv = hash_hmac('md5', implode("\3\2\3", array($rcmail->user->data['username'], $this->__getSecret())), $rcmail->config->get('des_key'), TRUE);
+            $name = hash_hmac('md5', $rcmail->user->data['username'], $rcmail->config->get('des_key'));
 
-                if ($set) {
-                    $expires = time() + 2592000; // 30 days from now
-                    $rand = mt_rand();
-                    $signature = hash_hmac('sha512', implode("\1\0\1", array($rcmail->user->data['username'], $this->__getSecret(), $user_agent, $rand, $expires)), $rcmail->config->get('des_key'), TRUE);
-                    $plain_content = sprintf("%d:%d:%s", $expires, $rand, $signature);
-                    $encrypted_content = openssl_encrypt($plain_content, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+            if ($set) {
+                $expires = time() + 2592000; // 30 days from now
+                $rand = mt_rand();
+                $signature = hash_hmac('sha512', implode("\1\0\1", array($rcmail->user->data['username'], $this->__getSecret(), $user_agent, $rand, $expires)), $rcmail->config->get('des_key'), TRUE);
+                $plain_content = sprintf("%d:%d:%s", $expires, $rand, $signature);
+                $encrypted_content = openssl_encrypt($plain_content, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+                if ($encrypted_content !== false) {
+                    $b64_encrypted_content = strtr(base64_encode($encrypted_content), '+/=', '-_,');
+                    rcube_utils::setcookie($name, $b64_encrypted_content, $expires);
+                    return TRUE;
+                }
+                return false;
+            } else {
+                $b64_encrypted_content = filter_input(INPUT_COOKIE, $name, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/[a-zA-Z0-9_-]+,{0,3}/')));
+                if (is_string($b64_encrypted_content) && !empty($b64_encrypted_content) && strlen($b64_encrypted_content)%4 === 0) {
+                    $encrypted_content = base64_decode(strtr($b64_encrypted_content, '-_,', '+/='), TRUE);
                     if ($encrypted_content !== false) {
-                        $b64_encrypted_content = strtr(base64_encode($encrypted_content), '+/=', '-_,');
-                        rcube_utils::setcookie($name, $b64_encrypted_content, $expires);
-                        return TRUE;
-                    }
-                    return false;
-                } else {
-                    $b64_encrypted_content = filter_input(INPUT_COOKIE, $name, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/[a-zA-Z0-9_-]+,{0,3}/')));
-                    if (is_string($b64_encrypted_content) && !empty($b64_encrypted_content) && strlen($b64_encrypted_content)%4 === 0) {
-                        $encrypted_content = base64_decode(strtr($b64_encrypted_content, '-_,', '+/='), TRUE);
-                        if ($encrypted_content !== false) {
-                            $plain_content = openssl_decrypt($encrypted_content, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-                            if ($plain_content !== false) {
-                                $now = time();
-                                list($expires, $rand, $signature) = explode(':', $plain_content, 3);
-                                if ($expires > $now && ($expires - $now) <= 2592000) {
-                                    $signature_verification = hash_hmac('sha512', implode("\1\0\1", array($rcmail->user->data['username'], $this->__getSecret(), $user_agent, $rand, $expires)), $rcmail->config->get('des_key'), TRUE);
-                                    // constant time
-                                    $cmp = strlen($signature) ^ strlen($signature_verification);
-                                    $signature = $signature ^ $signature_verification;
-                                    for($i = 0; $i < strlen($signature); $i++) {
-                                        $cmp += ord($signature [$i]);
-                                    }
-                                    return ($cmp===0);
+                        $plain_content = openssl_decrypt($encrypted_content, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+                        if ($plain_content !== false) {
+                            $now = time();
+                            list($expires, $rand, $signature) = explode(':', $plain_content, 3);
+                            if ($expires > $now && ($expires - $now) <= 2592000) {
+                                $signature_verification = hash_hmac('sha512', implode("\1\0\1", array($rcmail->user->data['username'], $this->__getSecret(), $user_agent, $rand, $expires)), $rcmail->config->get('des_key'), TRUE);
+                                // constant time
+                                $cmp = strlen($signature) ^ strlen($signature_verification);
+                                $signature = $signature ^ $signature_verification;
+                                for($i = 0; $i < strlen($signature); $i++) {
+                                    $cmp += ord($signature [$i]);
                                 }
+                                return ($cmp===0);
                             }
                         }
                     }
-                    return false;
                 }
-        }
+                return false;
+            }
+    }
 	// END remember
 
 
-        // log error into $_logs_file directory
-        private function __logError() {
-                file_put_contents(realpath(".").$this->_logs_file, date("Y-m-d H:i:s")."|".$_SERVER['HTTP_X_FORWARDED_FOR']."|".$_SERVER['REMOTE_ADDR']."\n", FILE_APPEND);
-        }
+    // log error into $_logs_file directory
+    private function __logError() {
+            file_put_contents(realpath(".").$this->_logs_file, date("Y-m-d H:i:s")."|".$_SERVER['HTTP_X_FORWARDED_FOR']."|".$_SERVER['REMOTE_ADDR']."\n", FILE_APPEND);
+    }
 
 }
