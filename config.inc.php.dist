@@ -14,10 +14,12 @@ $rcmail_config['allow_save_device_30days'] = true;
 // Default: form field will be text (false)
 $rcmail_config['twofactor_formfield_as_password'] = false;
 
-
 // Users allowed to use plugin (IMPORTANT: other users DON'T have plugin activated)
-$rcmail_config['users_allowed_2FA'] = array('ale.*@tereborace.com', 'administrator@tereborace.com');
+// $rcmail_config['users_allowed_2FA'] = array('ale.*@tereborace.com', 'administrator@tereborace.com');
 
+// Users excluded to use the 2FA plugin (IMPORTANT: good to use this to implement or enforce users to use 2FA with exceptions)
+// pair this with: $rcmail_config['force_enrollment_users'] = true;
+$rcmail_config['users_excluded_2FA'] = array('john.*@sample.com', 'admin@sample.com');
 
 // failure logging, suggested by @pngd (issue 131)
 $rcmail_config['enable_fail_logs'] = false;

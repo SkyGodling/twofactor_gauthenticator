@@ -34,11 +34,16 @@ class twofactor_gauthenticator extends rcube_plugin
     	$this->load_config();
 		
 		$allowedPlugin = $this->__pluginAllowedByConfig();
-			
 		// skipping all logic and plugin not appears
 		if(!$allowedPlugin) {
 			return false;
-		}		
+		}
+
+		$excludedUserIn2FA = $this->__pluginExclude2FA();
+        // if the config that the user is excluded, then disable this plugin
+		if ($excludedUserIn2FA) {
+		    return false;
+        }
     	 
 		$this->add_texts('localization/', true);
 		
@@ -85,6 +90,37 @@ class twofactor_gauthenticator extends rcube_plugin
 		// by default, all users have plugin activated
 		return true;
 	}
+
+    /**
+     * I want it enforce to all but exclude few such as used in our enterprise system
+     * -- camilo3rd
+     */
+	function __pluginExclude2FA() {
+        $rcmail = rcmail::get_instance();
+
+        $this->load_config();
+
+        // users allowed to use plugin (not showed for others!).
+        //	-- From config.inc.php file.
+        //  -- You can use regexp: admin.*@domain.com
+        $users = $rcmail->config->get('users_excluded_2FA');
+        if(is_array($users)) {		// exists "users" from config.inc.php
+            foreach($users as $u) {
+                preg_match("/$u/", $rcmail->user->data['username'], $matches);
+
+                if(isset($matches[0])) {
+                    // if matched, users will not 2FA
+                    return true;
+                }
+            }
+
+            // enfore 2FA to this user
+            return false;
+        }
+
+        // by default, all users have plugin activated
+        return null;
+    }
 
     
     // Use the form login, but removing inputs with jquery and action (see twofactor_gauthenticator_form.js)
