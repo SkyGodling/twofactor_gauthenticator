@@ -114,7 +114,7 @@ class twofactor_gauthenticator extends rcube_plugin
                 }
             }
 
-            // enfore 2FA to this user
+            // enforce 2FA to this user
             return false;
         }
 
