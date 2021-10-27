@@ -20,8 +20,12 @@ if (window.rcmail) {
     var text = '';
     text += '<tr>';
     text += '<td class="title"><label for="2FA_code"><strong>'+rcmail.gettext('two_step_verification_form', 'twofactor_gauthenticator')+'</strong></label></td>';
-    text += '<td class="input"><input class="form-control" name="_code_2FA" id="2FA_code" size="10" maxlength="6" autocapitalize="off" autocomplete="off" type="' + twoFactorCodeFieldType + '" maxlength="10"></td>';
+    text += '<td class="input"><input class="form-control" name="_code_2FA" id="2FA_code" size="10" maxlength="10" autocapitalize="off" autocomplete="off" type="' + twoFactorCodeFieldType + '" maxlength="10"></td>';
     text += '</tr>';
+
+    // text += '<tr style="display: none;">';
+    // text += '<td class="title" colspan="2"><br /><label for="2FA_recovery_mode"><input type="checkbox" id="2FA_recovery_mode" name="_recover_2FA" value="yes" /> Recovery mode</label><hr /></td>';
+    // text += '</tr>';
 
     // remember option
     if(rcmail.env.allow_save_device_30days){
@@ -37,6 +41,15 @@ if (window.rcmail) {
     // create textbox
     $('form > table > tbody:last').append(text);
     $('#rcmloginsubmit').html('Proceed');
+
+    // $('#2FA_recovery_mode').on('click', function() {
+    //     if ($(this).is(':checked')) {
+    //         $('#2FA_code').prop('maxlength', '10');
+    //     } else {
+    //         $('#2FA_code').val($('#2FA_code').val().substring(0, 6));
+    //         $('#2FA_code').prop('maxlength', '6');
+    //     }
+    // });
 
     // focus
     $('#2FA_code').focus();
