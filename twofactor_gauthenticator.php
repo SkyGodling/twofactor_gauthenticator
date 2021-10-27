@@ -204,7 +204,7 @@ class twofactor_gauthenticator extends rcube_plugin
         // if the config that the user is excluded, then disable this plugin
         $excludedUserInEnforce2FA = $this->__pluginExcludeEnforce2FA();
 		
-		if($config_2FA['activate'])
+		if ($config_2FA['activate'])
 		{
             // with IP allowed, we don't need to check anything
             if($rcmail->config->get('whitelist')) {
@@ -228,27 +228,26 @@ class twofactor_gauthenticator extends rcube_plugin
 						self::__consumeRecoveryCode($code);
 					}
 
-                                        if (rcube_utils::get_input_value('_remember_2FA', rcube_utils::INPUT_POST) === 'yes') {
-                                            $this->__cookie($set = true);
-                                        }
+                    if (rcube_utils::get_input_value('_remember_2FA', rcube_utils::INPUT_POST) === 'yes') {
+                        $this->__cookie($set = true);
+                    }
 
 					$this->__goingRoundcubeTask('mail');
 				}
 				else
 				{
-                                        if($rcmail->config->get('enable_fail_logs')) {
-                                                $this->__logError();
-                                        }
+                    if($rcmail->config->get('enable_fail_logs')) {
+                            $this->__logError();
+                    }
 					$this->__exitSession();
 				}
 			}
 			// we're into some task but marked with login...
-			elseif($rcmail->task !== 'login' && ! $_SESSION['twofactor_gauthenticator_2FA_login'] >= $_SESSION['twofactor_gauthenticator_login'])
+			else if($rcmail->task !== 'login' && ! $_SESSION['twofactor_gauthenticator_2FA_login'] >= $_SESSION['twofactor_gauthenticator_login'])
 			{
 				$this->__exitSession();
 			}
-		}
-		elseif(
+		} else if (
 		    $rcmail->config->get('force_enrollment_users') && !$excludedUserInEnforce2FA &&
             ($rcmail->task !== 'settings' || $rcmail->action !== 'plugin.twofactor_gauthenticator')
         ) {
