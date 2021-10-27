@@ -2,11 +2,19 @@ Roundcube Mail plugin: 2-Factor Authentication
 ==============================================
 
 **Requirement**
-- roundcube mail 1.5.x
+- Roundcube Webmail 1.5.x
 
 **Changelog**
  - fixed UI using bootstrap 4.5.x
- - improve UI form functionalities
+ - improved UI form functionalities
+
+**Features difference from `alexandregz/twofactor_gauthenticator`**
+- When you enable the config `force_enrollment_users` to enforce all users to use 2FA, I have added an option to exclude some users/domain enforcing 2FA.
+- When you click the Activate checkbox, will generate the `secret key` and `recovery codes` right away
+- You can also regenerate the `secret key`
+- QR Code always display
+- In testing the codes from you app, will display the server time.
+- Settings > 2FA form = fixed to work or display well in Roundcube Webmail v1.5.x
 
 ![Login](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_001.png)
 
@@ -18,6 +26,8 @@ Roundcube Mail plugin: 2-Factor Authentication
 - before you save the generated secret key, make sure you tested it using the "Test the generated PIN here"
 - If you keep getting "incorrect code", meaning your PC time and the server time is not the same.
 
+---
+---
 ---
 
 2Steps verification
