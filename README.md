@@ -1,4 +1,4 @@
-Roundcube Mail plugin: 2-Factor Authentication
+Roundcube Webmail plugin: 2-Factor Authentication
 ==============================================
 
 **Requirement**
