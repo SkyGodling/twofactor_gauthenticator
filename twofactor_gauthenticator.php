@@ -78,9 +78,7 @@ class twofactor_gauthenticator extends rcube_plugin
         if ($this_output) {
             $this->api->output->set_env('allow_save_device', $rcmail->config->get('allow_save_device', true));
             // default as 7 days to remember the device
-            $this->api->output->set_env('days_to_remember_device', (
-                ((int)$rcmail->config->get('days_to_remember_device', true) > 0) ? $rcmail->config->get('days_to_remember_device', true) : 7
-            ));
+            $this->api->output->set_env('days_to_remember_device', $rcmail->config->get('days_to_remember_device', 7));
             $this->api->output->set_env('twofactor_formfield_as_password', $rcmail->config->get('twofactor_formfield_as_password', false));
         }
     }
