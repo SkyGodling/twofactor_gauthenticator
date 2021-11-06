@@ -18,7 +18,7 @@ Roundcube Webmail plugin: 2-Factor Authentication
 - Settings > 2FA form = fixed to work or display well in Roundcube Webmail v1.5.x
 - Cleaner code, better indention, reformat codes using PHPStorm
 
-**How to install this plugin**
+**How to install this plugin?**
 - download the package and extract the contents
 - should have a folder called `twofactor_gauthenticator`
 - move the folder to roundube install destination under plugin folders: `{ROUNDCUBE_INSTALL}/plugins/`
