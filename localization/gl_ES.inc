@@ -32,7 +32,7 @@ $labels['check_code'] = 'Comprobar código';
 $labels['code_ok'] = 'Codigo correcto';
 $labels['code_ko'] = 'Codigo erróneo';
 
-$labels['dont_ask_me_30days'] = 'Non solicitar códigos nesta computadora durante 30 días';
+$labels['dont_ask_me_days'] = 'Non solicitar códigos nesta computadora durante {DAYS} días';
 
 $labels['check_code_to_activate'] = 'Para poder gardar, antes debese ter comprobado a validez dalgún código';
 

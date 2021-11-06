@@ -32,7 +32,7 @@ $labels['check_code'] = 'Sprawdź Kod';
 $labels['code_ok'] = 'Kod OK';
 $labels['code_ko'] = 'Błędny kod';
 
-$labels['dont_ask_me_30days'] = 'Nie pytaj ponownie o kod na tym komputerze przez następne 30 dni';
+$labels['dont_ask_me_days'] = 'Nie pytaj ponownie o kod na tym komputerze przez następne {DAYS} dni';
 
 $labels['check_code_to_activate'] = 'Aby zapisać, zeskanuj kod QR i zweryfikuj go przyciskiem Sprawdź Kod';
 

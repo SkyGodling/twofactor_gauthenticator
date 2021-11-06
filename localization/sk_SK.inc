@@ -31,7 +31,7 @@ $labels['check_code'] = 'Skontrolovať kód';
 $labels['code_ok'] = 'Správny kód';
 $labels['code_ko'] = 'Neplatný kód';
 
-$labels['dont_ask_me_30days'] = 'Nepýtať si na tomto zariadení kódy 30 dní ';
+$labels['dont_ask_me_days'] = 'Nepýtať si na tomto zariadení kódy {DAYS} dní ';
 
 $labels['check_code_to_activate'] = 'Pre aktiváciu naskenujte QR kód v TOTP aplikácii (napr. Google Authenticator alebo Authy) a následne zadajte vygenerovaný kód.';
 

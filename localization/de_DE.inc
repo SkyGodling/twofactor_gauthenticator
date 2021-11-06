@@ -31,7 +31,7 @@ $labels['check_code'] = '&Uuml;berpr&uuml;fe Code';
 $labels['code_ok'] = 'Code OK';
 $labels['code_ko'] = 'Falscher Code';
 
-$labels['dont_ask_me_30days'] = 'Nicht erneut nach dem Code fragen f&uuml;r die n&auml;chsten 30 Tage';
+$labels['dont_ask_me_days'] = 'Nicht erneut nach dem Code fragen f&uuml;r die n&auml;chsten {DAYS} Tage';
 
 $labels['check_code_to_activate'] = 'Um zu speichern, muss mindestens 1 Code zuvor gepr&uuml;pft werden';
 

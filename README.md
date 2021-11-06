@@ -9,6 +9,7 @@ Roundcube Webmail plugin: 2-Factor Authentication
  - improved UI form functionalities
 
 **Features difference from `alexandregz/twofactor_gauthenticator`**
+- Remember Device in days can be configured. It was 30 days before, now the default is 7 days. 30 days is too much.
 - When you enable the config `force_enrollment_users` to enforce all users to use 2FA, I have added an option to exclude some users/domain enforcing 2FA.
 - When you click the Activate checkbox, will generate the `secret key` and `recovery codes` right away
 - You can also regenerate the `secret key`

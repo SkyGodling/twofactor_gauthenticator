@@ -32,7 +32,7 @@ $labels['check_code'] = 'Kontroller kode';
 $labels['code_ok'] = 'Koden er OK';
 $labels['code_ko'] = 'Koden er forkert';
 
-$labels['dont_ask_me_30days'] = 'Spørg mig ikke igen de næste 30 dage på denne computer';
+$labels['dont_ask_me_days'] = 'Spørg mig ikke igen de næste {DAYS} dage på denne computer';
 
 $labels['check_code_to_activate'] = 'For at gemme, scan QR koden og indtast verificeringskoden nederst.';
 

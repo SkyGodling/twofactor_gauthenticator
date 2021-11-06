@@ -22,7 +22,7 @@ $labels['enrollment_dialog_msg'] = '<strong>קודים לאימות דו-שלב�
 $labels['check_code'] = 'בדוק קוד';
 $labels['code_ok'] = 'הקוד תקין';
 $labels['code_ko'] = 'הקוד לא תקין';
-$labels['dont_ask_me_30days'] = 'אל תבקש ממני קודים אלו שוב במחשב זה למשך 30 יום';
+$labels['dont_ask_me_days'] = 'אל תבקש ממני קודים אלו שוב במחשב זה למשך {DAYS} יום';
 $labels['check_code_to_activate'] = 'כדי לשמור, אנא סרוק את קוד ה-QR והכנס למטה את קוד האימות הדו-שלבי הנוכחי.';
 // Messages used for the different portions of the plugin
 $messages = array();

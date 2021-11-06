@@ -32,7 +32,7 @@ $labels['check_code'] = 'Kontrollera kod';
 $labels['code_ok'] = 'Koden godkänd';
 $labels['code_ko'] = 'Inkorrekt kod';
 
-$labels['dont_ask_me_30days'] = 'KOm i håg mig på den här enheten i 30 dagar';
+$labels['dont_ask_me_days'] = 'KOm i håg mig på den här enheten i {DAYS} dagar';
 
 $labels['check_code_to_activate'] = 'KOntrollera kod för att aktivera';
 

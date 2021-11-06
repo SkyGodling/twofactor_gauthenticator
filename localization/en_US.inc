@@ -31,7 +31,7 @@ $labels['check_code'] = 'Check code';
 $labels['code_ok'] = 'Code OK';
 $labels['code_ko'] = 'Incorrect code';
 
-$labels['dont_ask_me_30days'] = 'Don&#39;t ask me codes again on this computer for 30 days';
+$labels['dont_ask_me_days'] = 'Don&#39;t ask me codes again on this computer for {DAYS} days';
 
 $labels['check_code_to_activate'] = 'To save, please scan the QR Code and enter the current 2-Factor code below.';
 

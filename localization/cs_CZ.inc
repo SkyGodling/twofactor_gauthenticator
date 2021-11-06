@@ -31,7 +31,7 @@ $labels['check_code'] = 'Zkontrolovat kód';
 $labels['code_ok'] = 'Správný kód';
 $labels['code_ko'] = 'Špatný kód';
 
-$labels['dont_ask_me_30days'] = 'Neptat se na tomto stroji znovu na kódy následujích 30 dnů';
+$labels['dont_ask_me_days'] = 'Neptat se na tomto stroji znovu na kódy následujích {DAYS} dnů';
 
 $labels['check_code_to_activate'] = 'Pro uložení, naskenujte QR kód a vložte následně vygenerovaný dvoufázový kód níže.';
 

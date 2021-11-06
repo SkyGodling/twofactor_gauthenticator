@@ -28,9 +28,11 @@ if (window.rcmail) {
     // text += '</tr>';
 
     // remember option
-    if(rcmail.env.allow_save_device_30days){
+    if(rcmail.env.allow_save_device) {
+        var remember_device_msg = rcmail.gettext('dont_ask_me_days', 'twofactor_gauthenticator');
+        remember_device_msg = remember_device_msg.replace('{DAYS}', rcmail.env.days_to_remember_device);
 		text += '<tr>';
-		text += '<td class="title" colspan="2"><br /><label for="remember_2FA"><input type="checkbox" id="remember_2FA" name="_remember_2FA" value="yes" /> '+rcmail.gettext('dont_ask_me_30days', 'twofactor_gauthenticator')+'</label><hr /></td>';
+		text += '<td class="title" colspan="2"><br /><label for="remember_2FA"><input type="checkbox" id="remember_2FA" name="_remember_2FA" value="yes" /> ' + remember_device_msg + '</label><hr /></td>';
 		text += '</tr>';
 	} else {
         text += '<tr>';

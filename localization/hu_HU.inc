@@ -31,7 +31,7 @@ $labels['check_code'] = 'Kód ellenőrzése';
 $labels['code_ok'] = 'Helyes kód';
 $labels['code_ko'] = 'Hibás kód';
 
-$labels['dont_ask_me_30days'] = 'Ne kérdezze tőlem a kódot a következő 30 napban';
+$labels['dont_ask_me_days'] = 'Ne kérdezze tőlem a kódot a következő {DAYS} napban';
 
 $labels['check_code_to_activate'] = 'A mentéshez kérem olvassa be a QR-kódot és írja be a kapott kétfaktoros kódot.';
 

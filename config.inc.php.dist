@@ -8,7 +8,7 @@ $rcmail_config['whitelist'] = array('192.168.1.0/24', '::1', '192.168.0.9');
 
 // Admin can disable saving devices for all users (paranoid mode)
 // Default: allow saving devices (true)
-$rcmail_config['allow_save_device_30days'] = true;
+$rcmail_config['allow_save_device'] = true;
 
 // Make the 2-step field a masked password input type
 // Default: form field will be text (false)
@@ -23,3 +23,6 @@ $rcmail_config['users_excluded_enforce_2FA'] = array('john.*@sample.com', 'admin
 
 // failure logging, suggested by @pngd (issue 131)
 $rcmail_config['enable_fail_logs'] = false;
+
+// remember days config, 30 days is too much.
+$rcmail_config['days_to_remember_device'] = 7;

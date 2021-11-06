@@ -22,7 +22,7 @@ $labels['enrollment_dialog_msg'] = '<strong>2-staps verificatiecodes</strong> zi
 $labels['check_code'] = 'Check code';
 $labels['code_ok'] = 'Code correct';
 $labels['code_ko'] = 'Code incorrect';
-$labels['dont_ask_me_30days'] = 'Vraag me de komende 30 dagen niet opnieuw op deze computer';
+$labels['dont_ask_me_days'] = 'Vraag me de komende {DAYS} dagen niet opnieuw op deze computer';
 $labels['check_code_to_activate'] = 'Om op te slaan, scan alstublieft de QR Code en voer de verificatiecode hieronder in.';
 // Messages used for the different portions of the plugin
 $messages = array();

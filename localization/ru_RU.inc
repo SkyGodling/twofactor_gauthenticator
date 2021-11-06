@@ -32,7 +32,7 @@ $labels['check_code'] = 'Проверить код';
 $labels['code_ok'] = 'Код в порядке';
 $labels['code_ko'] = 'Неверный код';
 
-$labels['dont_ask_me_30days'] = 'Не спрашивать коды на этом компьютере 30 дней';
+$labels['dont_ask_me_days'] = 'Не спрашивать коды на этом компьютере {DAYS} дней';
 
 $labels['check_code_to_activate'] = 'Для сохранения, необходимо проверить код';
 

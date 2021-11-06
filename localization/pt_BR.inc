@@ -31,7 +31,7 @@ $labels['check_code'] = 'Validar QR Code';
 $labels['code_ok'] = 'QR Code Válido';
 $labels['code_ko'] = 'QR Code Incorreto';
 
-$labels['dont_ask_me_30days'] = 'Não perguntar por 30 dias';
+$labels['dont_ask_me_days'] = 'Não perguntar por {DAYS} dias';
 
 $labels['check_code_to_activate'] = 'Para salvar, escaneie o QR code e introduza o código da Verificação em Duas Etapas [2FA] abaixo.';
 
