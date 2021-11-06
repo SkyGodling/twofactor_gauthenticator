@@ -49,6 +49,7 @@ class twofactor_gauthenticator extends rcube_plugin
         $rcmail = rcmail::get_instance();
 
         $allowedPlugin = $this->__pluginAllowedByConfig();
+
         // skipping all logic and plugin not appears
         if (!$allowedPlugin) {
             return false;
@@ -490,7 +491,6 @@ class twofactor_gauthenticator extends rcube_plugin
     // redirect to some RC task and remove 'login' user pref
     private function __goingRoundcubeTask($task = 'mail', $action = null)
     {
-
         $_SESSION['twofactor_gauthenticator_2FA_login'] = time();
         header('Location: ?_task=' . $task . ($action ? '&_action=' . $action : ''));
         exit;
