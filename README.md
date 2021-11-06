@@ -21,7 +21,7 @@ Roundcube Webmail plugin: 2-Factor Authentication
 **How to install this plugin?**
 - download the package and extract the contents
 - should have a folder called `twofactor_gauthenticator`
-- move the folder to roundube install destination under plugin folders: `{ROUNDCUBE_INSTALL}/plugins/`
+- move the folder to roundube install destination under `plugins` folder: `{ROUNDCUBE_INSTALL}/plugins/`
 - then define your configuration, copy `{ROUNDCUBE_INSTALL}/plugins/config.inc.php.dist` as `{ROUNDCUBE_INSTALL}/plugins/config.inc.php`
 - that's it. login to you account, go to config and `2-factor Authentication` option should appear
 - activate the 2FA in your account, fill up the form and you're good to go.
