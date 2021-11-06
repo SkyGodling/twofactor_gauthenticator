@@ -16,6 +16,7 @@ Roundcube Webmail plugin: 2-Factor Authentication
 - QR Code always display
 - In testing the codes from you app, will display the server time.
 - Settings > 2FA form = fixed to work or display well in Roundcube Webmail v1.5.x
+- Cleaner code, better indention, reformat codes using PHPStorm
 
 ![Login](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_001.png)
 
