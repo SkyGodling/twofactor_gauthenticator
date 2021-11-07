@@ -15,6 +15,8 @@ $labels['show_secret'] = 'Show secret';
 $labels['hide_secret'] = 'Hide secret';
 $labels['create_secret'] = 'Create secret';
 
+$labels['new_secret'] = 'Generate New Secret';
+
 $labels['show_qr_code'] = 'Show QR Code';
 $labels['hide_qr_code'] = 'Hide QR Code';
 
