@@ -373,10 +373,10 @@ class twofactor_gauthenticator extends rcube_plugin
         $html_secret = '<div class="input-group mb-3">' . $input_descsecret->show() . '<div class="input-group-append">';
         if ($data['secret']) {
             $html_secret .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_change_secret" value="' . $this->gettext('show_secret') . '">';
-            $html_secret .= '<button class="btn btn-primary button mainaction" id="2FA_new_secret" type="button">Generate New Secret</button>';
+            $html_secret .= '<input type="button" class="btn btn-primary button mainaction" id="2FA_new_secret" value="' . $this->gettext('new_secret') . '">';
         } else {
             $html_secret .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_create_secret" disabled="disabled" value="' . $this->gettext('create_secret') . '">';
-            $html_secret .= '<button class="btn btn-primary button mainaction" id="2FA_new_secret" disabled="disabled" type="button">Generate New Secret</button>';
+            $html_secret .= '<input type="button" class="btn btn-primary button mainaction" id="2FA_new_secret" disabled="disabled" value="' . $this->gettext('new_secret') . '">';
         }
         $html_secret .= '</div></div>';
         $table->add(null, $html_secret);
