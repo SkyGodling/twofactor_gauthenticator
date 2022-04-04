@@ -421,7 +421,7 @@ class twofactor_gauthenticator extends rcube_plugin
 
         $html_check_code = '<br /><hr />
                             <div class="col-md-4">
-                                <p>Test the generated PIN here: (Server Time: ' . date('d M Y g:i:s') . ')</p>
+                                <p>' . $this->gettext('test_passcode') . ': (Server Time: ' . date('d M Y g:i:s') . ')</p>
                                 <div class="input-group mb-3">
                                   <input type="text" class="form-control" id="2FA_code_to_check" maxlength="6" aria-describedby="button-addon2">
                                   <div class="input-group-append">

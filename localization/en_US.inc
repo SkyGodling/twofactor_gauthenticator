@@ -37,6 +37,8 @@ $labels['dont_ask_me_days'] = 'Don&#39;t ask me codes again on this computer for
 
 $labels['check_code_to_activate'] = 'To save, please scan the QR Code and enter the current 2-Factor code below.';
 
+$labels['test_passcode'] = 'Test the generated Passcode here';
+
 // Messages used for the different portions of the plugin
 $messages = array();
 $messages['successfully_saved'] = '2-Factor authentication settings saved successfully.';
