@@ -39,6 +39,8 @@ $labels['check_code_to_activate'] = 'Pro uložení, naskenujte QR kód a vložte
 
 $labels['test_passcode'] = 'Zde můžete otestovat vygenerovaný ověřovací kód';
 
+$labels['proceed'] = 'Pokračovat';
+
 // Messages used for the different portions of the plugin
 $messages = array();
 $messages['successfully_saved'] = 'Nastavení dvoufázového ověření bylo úspěšně uloženo.';
