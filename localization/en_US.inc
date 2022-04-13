@@ -21,8 +21,10 @@ $labels['show_qr_code'] = 'Show QR Code';
 $labels['hide_qr_code'] = 'Hide QR Code';
 
 $labels['recovery_codes'] = 'Recovery codes';
+$labels['remaining_recovery_codes'] = 'Remaining recovery codes';
 $labels['show_recovery_codes'] = 'Show recovery codes';
 $labels['hide_recovery_codes'] = 'Hide recovery codes';
+$labels['new_recovery_codes'] = 'Generate New recovery codes';
 
 $labels['setup_all_fields'] = 'Fill all fields (make sure you click save to store your settings)';
 

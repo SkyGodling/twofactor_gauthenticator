@@ -160,6 +160,12 @@ if (window.rcmail) {
 		  generateQrCode();
 	  });
 
+	  $('#2FA_new_recovery_codes').click(function(){
+	  	  $("[name^='2FA_recovery_codes']").each(function() {
+		  	$(this).get(0).value = createSecret(10);
+			});
+	  });
+
 	  if ($('#2FA_secret').length && $('#2FA_secret').val().length) {
 		  $('#2FA_qr_code').show();
 	  }

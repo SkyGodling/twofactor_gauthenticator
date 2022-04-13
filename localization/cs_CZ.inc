@@ -21,8 +21,10 @@ $labels['show_qr_code'] = 'Zobrazit QR kód';
 $labels['hide_qr_code'] = 'Skrýt QR kód';
 
 $labels['recovery_codes'] = 'Kódy pro obnovení';
+$labels['remaining_recovery_codes'] = 'Počet zbývajících kódů';
 $labels['show_recovery_codes'] = 'Zobrazit kódy pro obnovení';
 $labels['hide_recovery_codes'] = 'Skrýt kódy pro obnovení';
+$labels['new_recovery_codes'] = 'Vygenerovat nové kódy pro obnovení';
 
 $labels['setup_all_fields'] = 'Vyplňte všechna pole (a ujistěte se, že jste klikli na tlačítko Uložit)';
 

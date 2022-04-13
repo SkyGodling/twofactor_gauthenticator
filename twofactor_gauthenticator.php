@@ -351,7 +351,6 @@ class twofactor_gauthenticator extends rcube_plugin
             'name' => $field_id,
             'id' => $field_id,
             'type' => 'checkbox',
-            'class' => 'form-check-input'
         ));
         $table->add('title', html::label($field_id, rcube::Q($this->gettext('activate'))));
         $checked = $data['activate'] ? null : 1; // :-?
@@ -367,34 +366,37 @@ class twofactor_gauthenticator extends rcube_plugin
             'type' => 'password',
             'value' => $data['secret'],
             'autocomplete' => 'new-password',
-            'class' => 'form-control'
+            'class' => 'form-control mr-2',
+            'readonly' => true
         ));
         $table->add('title', html::label($field_id, rcube::Q($this->gettext('secret'))));
-        $html_secret = '<div class="input-group mb-3">' . $input_descsecret->show() . '<div class="input-group-append">';
+        $html_secret = '<div class="input-group mb-3">' . $input_descsecret->show();
         if ($data['secret']) {
-            $html_secret .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_change_secret" value="' . $this->gettext('show_secret') . '">';
-            $html_secret .= '<input type="button" class="btn btn-primary button mainaction" id="2FA_new_secret" value="' . $this->gettext('new_secret') . '">';
+            $html_secret .= '<input type="button" class="button mainaction btn btn-primary mx-2" id="2FA_change_secret" value="' . $this->gettext('show_secret') . '">';
+            $html_secret .= '<input type="button" class="btn btn-primary button mainaction mx-2" id="2FA_new_secret" value="' . $this->gettext('new_secret') . '">';
         } else {
-            $html_secret .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_create_secret" disabled="disabled" value="' . $this->gettext('create_secret') . '">';
-            $html_secret .= '<input type="button" class="btn btn-primary button mainaction" id="2FA_new_secret" disabled="disabled" value="' . $this->gettext('new_secret') . '">';
+            $html_secret .= '<input type="button" class="button mainaction btn btn-primary mx-2" id="2FA_create_secret" disabled="disabled" value="' . $this->gettext('create_secret') . '">';
+            $html_secret .= '<input type="button" class="btn btn-primary button mainaction mx-2" id="2FA_new_secret" disabled="disabled" value="' . $this->gettext('new_secret') . '">';
         }
-        $html_secret .= '</div></div>';
+        $html_secret .= '</div>';
         $table->add(null, $html_secret);
 
 
         // recovery codes
-        $table->add('title', $this->gettext('recovery_codes'));
+        $remaining_recovery_codes = count($data['recovery_codes']);
+        $table->add('title', $this->gettext('recovery_codes') . '<br>' . $this->gettext('remaining_recovery_codes') . ': ' . $remaining_recovery_codes);
 
         $html_recovery_codes = '<div class="row">';
         $i = 0;
         for ($i = 0; $i < $this->_number_recovery_codes; $i++) {
             $value = isset($data['recovery_codes'][$i]) ? $data['recovery_codes'][$i] : '';
-            $html_recovery_codes .= '<div class="col-md-2"><input type="password" name="2FA_recovery_codes[]" value="' . $value . '" maxlength="10" class="form-control"></div>';
+            $html_recovery_codes .= '<div class="col-md-2"><input type="password" name="2FA_recovery_codes[]" value="' . $value . '" maxlength="10" class="form-control" readonly></div>';
         }
         if ($data['secret']) {
-            $html_recovery_codes .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_show_recovery_codes" value="' . $this->gettext('show_recovery_codes') . '">';
+            $html_recovery_codes .= '<input type="button" class="button mainaction btn btn-primary mx-2" id="2FA_show_recovery_codes" value="' . $this->gettext('show_recovery_codes') . '">';
+            $html_recovery_codes .= '<input type="button" class="button mainaction btn btn-primary mx-2" id="2FA_new_recovery_codes" value="' . $this->gettext('new_recovery_codes') . '">';
         } else {
-            $html_recovery_codes .= '<input type="button" class="button mainaction btn btn-primary" id="2FA_show_recovery_codes" disabled="disabled" value="' . $this->gettext('show_recovery_codes') . '">';
+            $html_recovery_codes .= '<input type="button" class="button mainaction btn btn-primary mx-2" id="2FA_show_recovery_codes" disabled="disabled" value="' . $this->gettext('show_recovery_codes') . '">';
         }
         $table->add(null, $html_recovery_codes);
 
@@ -420,12 +422,12 @@ class twofactor_gauthenticator extends rcube_plugin
         }*/
 
         $html_check_code = '<br /><hr />
-                            <div class="col-md-4">
-                                <p>' . $this->gettext('test_passcode') . ': (Server Time: ' . date('d M Y g:i:s') . ')</p>
+                            <div class="col-md-5">
+                                <p>' . $this->gettext('test_passcode') . ': (Server Time: ' . date('d-m-Y H:i:s') . ')</p>
                                 <div class="input-group mb-3">
-                                  <input type="text" class="form-control" id="2FA_code_to_check" maxlength="6" aria-describedby="button-addon2">
+                                  <input type="text" class="form-control mr-2" id="2FA_code_to_check" maxlength="6" aria-describedby="button-addon2">
                                   <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary mainaction button" type="button" id="2FA_check_code" id="button-addon2">' . $this->gettext('check_code') . '</button>
+                                    <button class="btn btn-outline-secondary mainaction button mx-2" type="button" id="2FA_check_code" id="button-addon2">' . $this->gettext('check_code') . '</button>
                                   </div>
                                 </div>
                             </div>';
