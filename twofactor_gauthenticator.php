@@ -74,6 +74,14 @@ class twofactor_gauthenticator extends rcube_plugin
         $this->include_script('twofactor_gauthenticator.js');
         $this->include_script('qrcode.min.js');
 
+        // set client IP address
+        if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)){
+            $this->ip_client = $_SERVER["HTTP_X_FORWARDED_FOR"];  
+        }else if (array_key_exists('REMOTE_ADDR', $_SERVER)) { 
+            $this->ip_client = $_SERVER["REMOTE_ADDR"]; 
+        }else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
+            $this->ip_client = $_SERVER["HTTP_CLIENT_IP"]; 
+        } 
         // settings we will export to the form javascript
         $this_output = $this->api->output;
         if ($this_output) {
@@ -133,15 +141,26 @@ class twofactor_gauthenticator extends rcube_plugin
         $rcmail = rcmail::get_instance();
         $this->load_config();
 
+         // enforce 2FA to this user
+         $this->isExcluded2FA = false;
+
+        // IP addresses excluded to use plugin.
+        //	-- From config.inc.php file.
+        $ip_addresses = $rcmail->config->get('ip_addresses_excluded_enforce_2FA');
+        if (is_array($ip_addresses)) {        // exists "addresses" from config.inc.php
+            foreach ($ip_addresses as $i) {
+                if (CIDR::match($this->ip_client, $i)) {
+                    // if matched, users will not 2FA
+                    $this->isExcluded2FA = true;
+                }
+            }
+        }    
+
         // users allowed to use plugin (not showed for others!).
         //	-- From config.inc.php file.
         //  -- You can use regexp: admin.*@domain.com
         $users = $rcmail->config->get('users_excluded_enforce_2FA');
         if (is_array($users)) {        // exists "users" from config.inc.php
-
-            // enforce 2FA to this user
-            $this->isExcluded2FA = false;
-
             foreach ($users as $u) {
                 preg_match("/$u/", $rcmail->user->data['username'], $matches);
 
@@ -150,10 +169,8 @@ class twofactor_gauthenticator extends rcube_plugin
                     $this->isExcluded2FA = true;
                 }
             }
-
-            return $this->isExcluded2FA;
         }
-
+        return $this->isExcluded2FA;
         // by default, all users have plugin activated
         return null;
     }
@@ -209,16 +226,9 @@ class twofactor_gauthenticator extends rcube_plugin
 
         if ($config_2FA['activate']) {
             // with IP allowed, we don't need to check anything
-            if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)){
-                $ip_client = $_SERVER["HTTP_X_FORWARDED_FOR"];  
-            }else if (array_key_exists('REMOTE_ADDR', $_SERVER)) { 
-                $ip_client = $_SERVER["REMOTE_ADDR"]; 
-            }else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
-                $ip_client = $_SERVER["HTTP_CLIENT_IP"]; 
-            } 
             if ($rcmail->config->get('whitelist')) {
                 foreach ($rcmail->config->get('whitelist') as $ip_to_check) {
-                    if (CIDR::match($ip_client, $ip_to_check)) {
+                    if (CIDR::match($this->ip_client, $ip_to_check)) {
                         if ($rcmail->task === 'login') $this->__goingRoundcubeTask('mail');
                         return $p;
                     }
