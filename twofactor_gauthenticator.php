@@ -400,7 +400,7 @@ class twofactor_gauthenticator extends rcube_plugin
 
 
         // recovery codes
-        $remaining_recovery_codes = count($data['recovery_codes']);
+        $remaining_recovery_codes = empty($data['recovery_codes']) ? 0: count($data['recovery_codes']);
         $table->add('title', $this->gettext('recovery_codes') . '<br>' . $this->gettext('remaining_recovery_codes') . ': ' . $remaining_recovery_codes);
 
         $html_recovery_codes = '<div class="row">';
