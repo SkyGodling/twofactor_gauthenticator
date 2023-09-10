@@ -21,8 +21,10 @@ $labels['show_qr_code'] = 'Show QR Code';
 $labels['hide_qr_code'] = 'Hide QR Code';
 
 $labels['recovery_codes'] = 'Recovery codes';
+$labels['remaining_recovery_codes'] = 'Remaining recovery codes';
 $labels['show_recovery_codes'] = 'Show recovery codes';
 $labels['hide_recovery_codes'] = 'Hide recovery codes';
+$labels['new_recovery_codes'] = 'Generate New recovery codes';
 
 $labels['setup_all_fields'] = 'Fill all fields (make sure you click save to store your settings)';
 
@@ -36,6 +38,10 @@ $labels['code_ko'] = 'Incorrect code';
 $labels['dont_ask_me_days'] = 'Don&#39;t ask me codes again on this computer for {DAYS} days';
 
 $labels['check_code_to_activate'] = 'To save, please scan the QR Code and enter the current 2-Factor code below.';
+
+$labels['test_passcode'] = 'Test the generated Passcode here';
+
+$labels['proceed'] = 'Proceed';
 
 // Messages used for the different portions of the plugin
 $messages = array();

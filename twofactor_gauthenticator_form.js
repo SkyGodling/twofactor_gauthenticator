@@ -30,10 +30,11 @@ if (window.rcmail) {
     // remember option
     if(rcmail.env.allow_save_device) {
         var remember_device_msg = rcmail.gettext('dont_ask_me_days', 'twofactor_gauthenticator');
+        proceed_msg = rcmail.gettext('proceed', 'twofactor_gauthenticator');
         remember_device_msg = remember_device_msg.replace('{DAYS}', rcmail.env.days_to_remember_device);
-		text += '<tr>';
-		text += '<td class="title" colspan="2"><br /><label for="remember_2FA"><input type="checkbox" id="remember_2FA" name="_remember_2FA" value="yes" /> ' + remember_device_msg + '</label><hr /></td>';
-		text += '</tr>';
+		    text += '<tr>';
+		    text += '<td class="title" colspan="2"><br /><label for="remember_2FA"><input type="checkbox" id="remember_2FA" name="_remember_2FA" value="yes" /> ' + remember_device_msg + '</label><hr /></td>';
+		    text += '</tr>';
 	} else {
         text += '<tr>';
         text += '<td class="title" colspan="2"><hr /></td>';
@@ -42,7 +43,7 @@ if (window.rcmail) {
 
     // create textbox
     $('form > table > tbody:last').append(text);
-    $('#rcmloginsubmit').html('Proceed');
+    $('#rcmloginsubmit').html(proceed_msg);
 
     // $('#2FA_recovery_mode').on('click', function() {
     //     if ($(this).is(':checked')) {

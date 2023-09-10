@@ -21,6 +21,10 @@ $rcmail_config['twofactor_formfield_as_password'] = false;
 // pair this with: $rcmail_config['force_enrollment_users'] = true;
 $rcmail_config['users_excluded_enforce_2FA'] = array('john.*@sample.com', 'admin@sample.com');
 
+// IP addresses excluded to use the 2FA plugin
+// pair this with: $rcmail_config['force_enrollment_users'] = true;
+$rcmail_config['ip_addresses_excluded_enforce_2FA'] = array('192.168.0.0/16', '10.0.0.0/8');
+
 // failure logging, suggested by @pngd (issue 131)
 $rcmail_config['enable_fail_logs'] = false;
 
