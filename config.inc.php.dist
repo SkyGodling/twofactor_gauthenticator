@@ -4,7 +4,7 @@ $rcmail_config['force_enrollment_users'] = false;
 
 // whitelist, CIDR format available
 // NOTE: we need to use .0 IP to define LAN because the class CIDR have a issue about that (we can't use 129.168.1.2/24, for example)
-$rcmail_config['whitelist'] = array('192.168.1.0/24', '::1', '192.168.0.9');
+// $rcmail_config['whitelist'] = array('192.168.1.0/24', '::1', '192.168.0.9');
 
 // Admin can disable saving devices for all users (paranoid mode)
 // Default: allow saving devices (true)
@@ -19,11 +19,11 @@ $rcmail_config['twofactor_formfield_as_password'] = false;
 
 // Users excluded to use the 2FA plugin (IMPORTANT: good to use this to implement or enforce users to use 2FA with exceptions)
 // pair this with: $rcmail_config['force_enrollment_users'] = true;
-$rcmail_config['users_excluded_enforce_2FA'] = array('john.*@sample.com', 'admin@sample.com');
+// $rcmail_config['users_excluded_enforce_2FA'] = array('john.*@sample.com', 'admin@sample.com');
 
 // IP addresses excluded to use the 2FA plugin
 // pair this with: $rcmail_config['force_enrollment_users'] = true;
-$rcmail_config['ip_addresses_excluded_enforce_2FA'] = array('192.168.0.0/16', '10.0.0.0/8');
+// $rcmail_config['ip_addresses_excluded_enforce_2FA'] = array('192.168.0.0/16', '10.0.0.0/8');
 
 // failure logging, suggested by @pngd (issue 131)
 $rcmail_config['enable_fail_logs'] = false;

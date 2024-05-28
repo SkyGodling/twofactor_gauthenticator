@@ -1,7 +1,5 @@
 if (window.rcmail) {
   rcmail.addEventListener('init', function(evt) {
-
-	  // ripped from PHPGansta/GoogleAuthenticator.php
 		function createSecret(secretLength) {
 			if(!secretLength) secretLength = 16;
 
@@ -15,7 +13,7 @@ if (window.rcmail) {
 
 			var secret = '';
 			var random = new Uint8Array(secretLength);
-			var cryptoapi = window.crypto || window.msCrypto; // Support IE11 for now
+			var cryptoapi = window.crypto || window.msCrypto;
 			cryptoapi.getRandomValues(random);
 			for (var i = 0; i < secretLength; i++) {
 				secret += lookupTable[random[i]%lookupTable.length];
@@ -23,7 +21,6 @@ if (window.rcmail) {
 			return secret;
 		}
 
-		// populate all fields
 		function setup2FAfields() {
 			if($('#2FA_secret').get(0).value) return;
 
@@ -50,10 +47,6 @@ if (window.rcmail) {
 			});
 
 
-
-			// add qr-code before msg_infor
-			/*$('table tr:last').before('<tr><td>' +rcmail.gettext('qr_code', 'twofactor_gauthenticator')+ '</td><td><input type="button" class="button mainaction btn btn-primary" id="2FA_change_qr_code" value="'
-					+rcmail.gettext('hide_qr_code', 'twofactor_gauthenticator')+ '"><div id="2FA_qr_code" style="display: visible; margin-top: 10px;"></div></td></tr>');*/
 			var qr_container_elem = $('#2FA_qr_code');
 			if (!qr_container_elem.length) {
 				$('table tr:last').before('<tr><td>' +rcmail.gettext('qr_code', 'twofactor_gauthenticator')+ '</td><td><div id="2FA_qr_code" style="display: visible; margin-top: 10px;"></div></td></tr>');
@@ -61,10 +54,8 @@ if (window.rcmail) {
 
 			var qrcode = generateQrCode();
 
-			//$('#2FA_change_qr_code').click(click2FA_change_qr_code);
-			qr_container_elem.prop('title', '');    // enjoy the silence (qrcode.js uses text to set title)
+			qr_container_elem.prop('title', '');
 
-			// disable save button. It needs check code to enabled again
 			$('#2FA_setup_fields').prev().attr('disabled','disabled').attr('title', rcmail.gettext('check_code_to_activate', 'twofactor_gauthenticator'));
 					   alert(rcmail.gettext('check_code_to_activate', 'twofactor_gauthenticator'));
 		}
@@ -83,7 +74,7 @@ if (window.rcmail) {
 				height: 200,
 				colorDark : "#000000",
 				colorLight : "#ffffff",
-				correctLevel : QRCode.CorrectLevel.L		// like charts.googleapis.com
+				correctLevel : QRCode.CorrectLevel.L
 			});
 			$('#2FA_qr_code').show();
 		}
@@ -105,7 +96,6 @@ if (window.rcmail) {
 	  });
 	  
 	  
-	  // to show/hide secret
 	  click2FA_change_secret = function(){
 		  if($('#2FA_secret').get(0).type === 'text') {
 			  $('#2FA_secret').get(0).type = 'password';
@@ -136,24 +126,6 @@ if (window.rcmail) {
 		  }
 	  });
 	  
-	  
-	  // to show/hide qr_code
-	  /*click2FA_change_qr_code = function(){
-		  if( $('#2FA_qr_code').is(':visible') ) {
-			  $('#2FA_qr_code').slideUp();
-			  $(this).get(0).value = rcmail.gettext('show_qr_code', 'twofactor_gauthenticator');
-		  }
-		  else {
-			$('#2FA_qr_code').slideDown();
-		  	$(this).get(0).value = rcmail.gettext('hide_qr_code', 'twofactor_gauthenticator');
-		  }
-	  }
-	  $('#2FA_change_qr_code').click(click2FA_change_qr_code);*/
-	  
-	  // create secret
-	  // $('#2FA_create_secret').click(function(){
-		   //$('#2FA_secret').get(0).value = createSecret();
-	  // });
 
 	  $('#2FA_new_secret').click(function(){
 		  $('#2FA_secret').get(0).value = createSecret();
@@ -183,7 +155,6 @@ if (window.rcmail) {
 		  }
 	  });
     
-    // Define Variables
     var tabtwofactorgauthenticator = $('<li>')
       .attr('id', 'settingstabplugintwofactor_gauthenticator')
       .addClass('listitem twofactor_gauthenticator');
@@ -196,7 +167,6 @@ if (window.rcmail) {
       .attr('aria-disabled', 'false')
       .appendTo(tabtwofactorgauthenticator);
 
-    // Button & Register commands
     rcmail.add_element(tabtwofactorgauthenticator, 'tabs');
     rcmail.register_command('plugin.twofactor_gauthenticator', function() { console.log('loaded'); rcmail.goto_url('plugin.twofactor_gauthenticator') }, true);
     rcmail.register_command('plugin.twofactor_gauthenticator-save', function() {

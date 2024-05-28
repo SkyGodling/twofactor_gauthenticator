@@ -1,44 +1,7 @@
-Roundcube Webmail plugin: 2-Factor Authentication
-==============================================
+# twofactor_gauthenticator
+This RoundCube plugin adds the Google 2-step verification to the login proccess (OTP)
 
-**Requirement**
-- Roundcube Webmail 1.5.x
-
-**Changelog**
- - fixed UI using bootstrap 4.5.x
- - improved UI form functionalities
-
-**Features difference from `alexandregz/twofactor_gauthenticator`**
-- Remember Device in days can be configured. It was 30 days before, now the default is 7 days. 30 days is too much.
-- When you enable the config `force_enrollment_users` to enforce all users to use 2FA, I have added an option to exclude some users/domain enforcing 2FA.
-- When you click the Activate checkbox, will generate the `secret key` and `recovery codes` right away
-- You can also regenerate the `secret key`
-- QR Code always display
-- In testing the codes from you app, will display the server time.
-- Settings > 2FA form = fixed to work or display well in Roundcube Webmail v1.5.x
-- Cleaner code, better indention, reformat codes using PHPStorm
-
-**How to install this plugin?**
-- download the package and extract the contents
-- should have a folder called `twofactor_gauthenticator`
-- move the folder to roundube install destination under `plugins` folder: `{ROUNDCUBE_INSTALL}/plugins/`
-- then define your configuration, copy `{ROUNDCUBE_INSTALL}/plugins/config.inc.php.dist` as `{ROUNDCUBE_INSTALL}/plugins/config.inc.php`
-- that's it. login to you account, go to config and `2-factor Authentication` option should appear
-- activate the 2FA in your account, fill up the form and you're good to go.
-
-![Login](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_001.png)
-
-![2Steps](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_002.png)
-
-![2Steps](https://raw.github.com/camilord/twofactor_gauthenticator/master/screenshots/rcube1.5_003.png)
-
-## NOTES
-- before you save the generated secret key, make sure you tested it using the "Test the generated PIN here"
-- If you keep getting "incorrect code", meaning your PC time and the server time is not the same.
-
----
----
----
+## Add Vietnamese language support
 
 2Steps verification
 ==========================
@@ -52,31 +15,18 @@ Some code by:
 [Justin Buchanan](https://github.com/jusbuc2k)
 [Ricardo Iván Vieitez Parra](https://github.com/corrideat)
 
+![2Steps](https://raw.github.com/k4t3pr0/twofactor_gauthenticator/master/screenshots/092443.png)
 
-[GoogleAuthenticator class](https://github.com/PHPGangsta/GoogleAuthenticator/) by Michael Kliewe (to *see* secrets)
-
-[qrcode.js](https://github.com/davidshimjs/qrcodejs) by ShimSangmin
-
-Also thx to [Victor R. Rodriguez Dominguez](https://github.com/vrdominguez) for some ideas and support  
-
-
-
-![Login](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/001-login.png)
-
-![2Steps](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/002-2steps.png)
-
-
+iRedMail_Reset_2FA
+------------
+I have added a Python GUI script to handle the issue of activation or deactivation when the phone is lost or the code is forgotten. With iRedMail_Reset_2FA folder.
+![2Steps](https://raw.github.com/k4t3pr0/twofactor_gauthenticator/master/screenshots/2fa.jpg)
+ 
 Installation
 ------------
 - Clone from github:
-    HOME_RC/plugins$ git clone [https://github.com/alexandregz/twofactor_gauthenticator.git](https://github.com/alexandregz/twofactor_gauthenticator.git)
+    HOME_RC/plugins$ git clone [https://github.com/k4t3pr0/twofactor_gauthenticator.git](https://github.com/k4t3pr0/twofactor_gauthenticator.git)
     
-
-(Or use composer
-     HOME_RC$ composer require alexandregz/twofactor_gauthenticator:dev-master
-     
- NOTE: Answer **N** when composer ask you about plugin activation)
-
 - Activate the plugin into HOME_RC/config/config.inc.php:
     $config['plugins'] = array('twofactor_gauthenticator');
 
@@ -90,31 +40,15 @@ The plugin automatically creates the secret for you.
 NOTE: plugin must be base32 valid characters ([A-Z][2-7]), see https://github.com/alexandregz/twofactor_gauthenticator/blob/master/PHPGangsta/GoogleAuthenticator.php#L18
 
 From https://github.com/alexandregz/twofactor_gauthenticator/issues/139
-
-
-	
 To add accounts to the app, you can use the QR-Code (easy-way) or type the secret.
 After checking the first code click 'Save'.
 
-![Settings by default](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/003-settings_default.png)
-
-![Settings OK](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/004-settings_ok.png)
-
-![QR-Code example](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/005-settings_qr_code.png)
-
-
-Also, you can add "Recovery codes" for use one time (they delete when are used). Recovery codes are OPTIONAL, so they can be left blank.
-
-![Recovery codes](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/006-recovery_codes.png) 
-
-
-![Check codes](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/007-check_code.png) 
-
-
-
-![Recovery codes](https://raw.github.com/alexandregz/twofactor_gauthenticator/master/screenshots/008-msg_infor_about_enrollment.png) 
-
-
+Get the default time from the server to synchronize with the Phone's NTP time.
+----------------
+To synchronize the time I added the following code in twofactor_gauthenticator.php
+// Get the default time from the server to synchronize with the Phone's NTP time.
+ date_default_timezone_set('Asia/Ho_Chi_Minh');
+Change the time zone to suit your location
 
 Enrollment Users
 ----------------
@@ -131,6 +65,7 @@ Actually only into samefield branch
 Codes
 -----
 Codes have a 2*30 seconds clock tolerance, like by default with Google app (Maybe editable in future versions)
+
 
 
 License
@@ -174,11 +109,7 @@ Logs
 Suggested by simon@magrin.com
 
 To log errors with bad codes, change the $_enable_logs variable to true.
-
 The logs are stored to the file HOME_RC/logs/log_errors_2FA.txt -directory must be created
-
-
-
 Whitelist
 ---------
 
@@ -202,29 +133,15 @@ Activate only for specific users
 
 - Modify array  **users_allowed_2FA** with users that you want to use plugin. NOTE: you can use regular expressions
 
-
-
 ## Use with 1.3.x version
 
-Use *1.3.9-version* branch
-
-`$ git checkout 1.3.9-version`
-
-If you download 1.4.x RC version (with *elastic skin*), use *master* version normally (thx to [tborgans](https://github.com/tborgans))
-
-![Elastic Skin start](https://raw.githubusercontent.com/alexandregz/twofactor_gauthenticator/master/screenshots/009-elastic_skin_start.png)
-
-![Elastic Skin config](https://raw.githubusercontent.com/alexandregz/twofactor_gauthenticator/master/screenshots/010-elastic_skin_config.png)
-
-
-
-
+Use *1.4.9-version* branch
 
 ## Security incident 2022-04-02
 
 Reported by kototilt@haiiro.dev (thx for the report and the PoC script)
 
-I make a little modification on script to not allow to save config without param session generated from a rendered page, to force user to introduce previously 2FA code and navigate across site.
+I made a little modification on script to not allow to save config without param session generated from a rendered page, to force user to introduce previously 2FA code and navigate across site.
 
 NOTE: Also I check if user have 2FA activated because with only first condition -check SESSION- app kick out me before to activate 2FA.
 
@@ -283,3 +200,12 @@ Password:xxxxxxxxx
 Expected "settings" task, something went wrong
 ``` 
 
+
+
+## docker-compose
+
+You can use `docker-compose` file to modify and test plugin:
+
+- Replace `mail.EXAMPLE.com` for your IMAP and SMTP server.
+- `docker-compose up`
+- You can use `adminer` to check DB and reset secrets, for example.

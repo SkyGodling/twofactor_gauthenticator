@@ -23,11 +23,6 @@ if (window.rcmail) {
     text += '<td class="input"><input class="form-control" name="_code_2FA" id="2FA_code" size="10" maxlength="10" autocapitalize="off" autocomplete="off" type="' + twoFactorCodeFieldType + '" maxlength="10"></td>';
     text += '</tr>';
 
-    // text += '<tr style="display: none;">';
-    // text += '<td class="title" colspan="2"><br /><label for="2FA_recovery_mode"><input type="checkbox" id="2FA_recovery_mode" name="_recover_2FA" value="yes" /> Recovery mode</label><hr /></td>';
-    // text += '</tr>';
-
-    // remember option
     if(rcmail.env.allow_save_device) {
         var remember_device_msg = rcmail.gettext('dont_ask_me_days', 'twofactor_gauthenticator');
         proceed_msg = rcmail.gettext('proceed', 'twofactor_gauthenticator');
@@ -45,16 +40,6 @@ if (window.rcmail) {
     $('form > table > tbody:last').append(text);
     $('#rcmloginsubmit').html(proceed_msg);
 
-    // $('#2FA_recovery_mode').on('click', function() {
-    //     if ($(this).is(':checked')) {
-    //         $('#2FA_code').prop('maxlength', '10');
-    //     } else {
-    //         $('#2FA_code').val($('#2FA_code').val().substring(0, 6));
-    //         $('#2FA_code').prop('maxlength', '6');
-    //     }
-    // });
-
-    // focus
     $('#2FA_code').focus();
     
   });

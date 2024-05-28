@@ -1,23 +1,8 @@
 <?php
-/**
- * Two-factor Google Authenticator for RoundCube
- *
- * This RoundCube plugin adds the 2-step verification(OTP) to the login proccess
- *
- * @version 2.0.0
- * @author Alexandre Espinosa <aemenor@gmail.com>
- *
- * Some ideas and code: Ricardo Signes <rjbs@cpan.org>, Ricardo Iván Vieitez Parra (https://github.com/corrideat), Justin Buchanan (https://github.com/jusbuc2k)
- *    , https://github.com/pokrface, Peter Tobias, Víctor R. Rodríguez Domínguez (https://github.com/vrdominguez), etc.
- * Date: 2013-11-30
- */
-require_once 'PHPGangsta/GoogleAuthenticator.php';
 
+require_once 'PHPGangsta/GoogleAuthenticator.php';
 require_once 'CIDR.php';
 
-/**
- * Class twofactor_gauthenticator
- */
 class twofactor_gauthenticator extends rcube_plugin
 {
     /**
@@ -158,7 +143,7 @@ class twofactor_gauthenticator extends rcube_plugin
 
         // users allowed to use plugin (not showed for others!).
         //	-- From config.inc.php file.
-        //  -- You can use regexp: admin.*@domain.com
+        //  -- You can use regexp: anhnh.stttt@gialai.gov.vn
         $users = $rcmail->config->get('users_excluded_enforce_2FA');
         if (is_array($users)) {        // exists "users" from config.inc.php
             foreach ($users as $u) {
@@ -273,9 +258,6 @@ class twofactor_gauthenticator extends rcube_plugin
     }
 
 
-    /**
-     * ripped from new_user_dialog plugin
-     */
     function popup_msg_enrollment()
     {
         $rcmail = rcmail::get_instance();
@@ -287,7 +269,7 @@ class twofactor_gauthenticator extends rcube_plugin
             $rcmail->task == 'settings' && $rcmail->action == 'plugin.twofactor_gauthenticator' &&
             !$excludedUserInEnforce2FA
         ) {
-            // add overlay input box to html page
+
             $rcmail->output->add_footer(html::tag('form', array(
                 'id' => 'enrollment_dialog',
                 'method' => 'post'),
@@ -301,10 +283,6 @@ class twofactor_gauthenticator extends rcube_plugin
         }
     }
 
-
-    /**
-     * show config
-     */
     function twofactor_gauthenticator_init()
     {
         $rcmail = rcmail::get_instance();
@@ -316,15 +294,11 @@ class twofactor_gauthenticator extends rcube_plugin
         $rcmail->output->send('plugin');
     }
 
-    // save config
     function twofactor_gauthenticator_save()
     {
         $rcmail = rcmail::get_instance();
 
-		// 2022-04-03: Corrected security incidente reported by kototilt@haiiro.dev
-		//					"2FA in twofactor_gauthenticator can be bypassed allowing an attacker to disable 2FA or change the TOTP secret."
-		//
-		// Solution: if user don't have session created by any rendered page, we kick out
+		// Solution: Fix Security incident CVE NGUYEN HUNG ANH.
 		$config_2FA = self::__get2FAconfig();
 		if(!$_SESSION['twofactor_gauthenticator_2FA_login'] && $config_2FA['activate']) {
 			$this->__exitSession();
@@ -334,12 +308,10 @@ class twofactor_gauthenticator extends rcube_plugin
         $this->register_handler('plugin.body', array($this, 'twofactor_gauthenticator_form'));
         $rcmail->output->set_pagetitle($this->gettext('twofactor_gauthenticator'));
 
-        // POST variables
         $activate = rcube_utils::get_input_value('2FA_activate', rcube_utils::INPUT_POST);
         $secret = rcube_utils::get_input_value('2FA_secret', rcube_utils::INPUT_POST);
         $recovery_codes = rcube_utils::get_input_value('2FA_recovery_codes', rcube_utils::INPUT_POST);
 
-        // remove recovery codes without value
         $recovery_codes = array_values(array_diff($recovery_codes, array('')));
 
         $data = self::__get2FAconfig();
@@ -348,7 +320,6 @@ class twofactor_gauthenticator extends rcube_plugin
         $data['recovery_codes'] = $recovery_codes;
         self::__set2FAconfig($data);
 
-        // if we can't save time into SESSION, the plugin logouts
         $_SESSION['twofactor_gauthenticator_2FA_login'] = time();
 
         $rcmail->output->show_message($this->gettext('successfully_saved'), 'confirmation');
@@ -357,8 +328,6 @@ class twofactor_gauthenticator extends rcube_plugin
         $rcmail->output->send('plugin');
     }
 
-
-    // form config
     public function twofactor_gauthenticator_form()
     {
         $rcmail = rcmail::get_instance();
@@ -368,10 +337,8 @@ class twofactor_gauthenticator extends rcube_plugin
 
         $data = self::__get2FAconfig();
 
-        // Fields will be positioned inside of a table
         $table = new html_table(array('cols' => 2));
 
-        // Activate/deactivate
         $field_id = '2FA_activate';
         $checkbox_activate = new html_checkbox(array(
             'name' => $field_id,
@@ -382,8 +349,6 @@ class twofactor_gauthenticator extends rcube_plugin
         $checked = $data['activate'] ? null : 1; // :-?
         $table->add(null, $checkbox_activate->show($checked));
 
-
-        // secret
         $field_id = '2FA_secret';
         $input_descsecret = new html_inputfield(array(
             'name' => $field_id,
@@ -407,8 +372,6 @@ class twofactor_gauthenticator extends rcube_plugin
         $html_secret .= '</div>';
         $table->add(null, $html_secret);
 
-
-        // recovery codes
         $remaining_recovery_codes = empty($data['recovery_codes']) ? 0: count($data['recovery_codes']);
         $table->add('title', $this->gettext('recovery_codes') . '<br>' . $this->gettext('remaining_recovery_codes') . ': ' . $remaining_recovery_codes);
 
@@ -426,27 +389,19 @@ class twofactor_gauthenticator extends rcube_plugin
         }
         $table->add(null, $html_recovery_codes);
 
-
-        // qr-code
         if ($data['secret']) {
             $table->add('title', $this->gettext('qr_code'));
-            /*$table->add(null, '<input type="button" class="button mainaction btn btn-primary" id="2FA_change_qr_code" value="'.$this->gettext('show_qr_code').'">
-                                <div id="2FA_qr_code" style="display: none; margin-top: 10px;"></div>');*/
             $table->add(null, '<div id="2FA_qr_code" style="display: none; margin-top: 10px;"></div>');
 
             // new JS qr-code, without call to Google
             $this->include_script('2FA_qr_code.js');
         }
 
-        // infor
         $table->add(null, '<td><br>' . $this->gettext('msg_infor') . '</td>');
 
-        // button to setup all fields if doesn't exists secret
         $html_setup_all_fields = '';
-        /*if(!$data['secret']) {
-        	$html_setup_all_fields = '<br /><br /><input type="button" class="button mainaction btn btn-secondary" id="2FA_setup_fields" value="'.$this->gettext('setup_all_fields').'">';
-        }*/
-
+        // Lấy giờ mặc định từ máy chủ để đồng bộ với giờ NTP Điện thoại.
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $html_check_code = '<br /><hr />
                             <div class="col-md-5">
                                 <p>' . $this->gettext('test_passcode') . ': (Server Time: ' . date('d-m-Y H:i:s') . ')</p>
@@ -458,8 +413,6 @@ class twofactor_gauthenticator extends rcube_plugin
                                 </div>
                             </div>';
 
-
-        // Build the table with the divs around it
         $out = html::div(array('class' => 'settingsbox', 'style' => 'margin: 0;'),
             html::div(array('id' => 'prefs-title', 'class' => 'formcontent'),
                 '<legend>' . $this->gettext('twofactor_gauthenticator') . ' - ' . $rcmail->user->data['username'] . '</legend>'
@@ -472,17 +425,12 @@ class twofactor_gauthenticator extends rcube_plugin
                         'label' => 'save'
                     ))
 
-                    // button show/hide secret
-                    //.'<input type="button" class="button mainaction" id="2FA_change_secret" value="'.$this->gettext('show_secret').'">'
-
-                    // button to setup all fields
                     . $html_setup_all_fields . '</div>'
                     . $html_check_code
                 )
             )
         );
 
-        // Construct the form
         $rcmail->output->add_gui_object('twofactor_gauthenticatorform', 'twofactor_gauthenticator-form');
 
         $out = $rcmail->output->form_tag(array(
@@ -497,8 +445,6 @@ class twofactor_gauthenticator extends rcube_plugin
         return $out;
     }
 
-
-    // used with ajax
     function checkCode()
     {
         $code = rcube_utils::get_input_value('code', rcube_utils::INPUT_GET);
@@ -513,10 +459,6 @@ class twofactor_gauthenticator extends rcube_plugin
         exit;
     }
 
-
-    //------------- private methods
-
-    // redirect to some RC task and remove 'login' user pref
     private function __goingRoundcubeTask($task = 'mail', $action = null)
     {
         $_SESSION['twofactor_gauthenticator_2FA_login'] = time();
@@ -569,9 +511,6 @@ class twofactor_gauthenticator extends rcube_plugin
         self::__set2FAconfig($prefs);
     }
 
-
-    // GoogleAuthenticator class methods (see PHPGangsta/GoogleAuthenticator.php for more infor)
-    // returns string
     private function __createSecret()
     {
         $ga = new PHPGangsta_GoogleAuthenticator();
@@ -585,15 +524,12 @@ class twofactor_gauthenticator extends rcube_plugin
         return $prefs['secret'];
     }
 
-    // Commented. If you have problems with qr-code.js, you can uncomment and use this
-    //
-    // returns string (url to img)
     private function __getQRCodeGoogle()
     {
         $rcmail = rcmail::get_instance();
 
         $ga = new PHPGangsta_GoogleAuthenticator();
-        return $ga->getQRCodeGoogleUrl($rcmail->user->data['username'], self::__getSecret(), 'RoundCube2FA');
+        return $ga->getQRCodeGoogleUrl($rcmail->user->data['username'], self::__getSecret(), 'MaiGiaLai(2FA)');
     }
 
     // returns boolean
@@ -603,8 +539,6 @@ class twofactor_gauthenticator extends rcube_plugin
         return $ga->verifyCode(($secret ? $secret : self::__getSecret()), $code, 2);    // 2 = 2*30sec clock tolerance
     }
 
-
-    // remember option by https://github.com/corrideat/
     private function __cookie($set = TRUE)
     {
         $rcmail = rcmail::get_instance();
@@ -613,7 +547,6 @@ class twofactor_gauthenticator extends rcube_plugin
         $iv = hash_hmac('md5', implode("\3\2\3", array($rcmail->user->data['username'], $this->__getSecret())), $rcmail->config->get('des_key'), TRUE);
         $name = hash_hmac('md5', $rcmail->user->data['username'], $rcmail->config->get('des_key'));
 
-        // 7 days * hours of a day * an hour
         $days2remember_device = (int)$rcmail->config->get('days_to_remember_device') * 24 * 3600;
 
         if ($set) {
