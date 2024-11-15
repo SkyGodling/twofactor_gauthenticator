@@ -15,17 +15,17 @@ Some code by:
 [Justin Buchanan](https://github.com/jusbuc2k)
 [Ricardo Iván Vieitez Parra](https://github.com/corrideat)
 
-![2Steps](https://raw.github.com/k4t3pr0/twofactor_gauthenticator/master/screenshots/092443.png)
+![2Steps](https://raw.github.com/skyalliance/twofactor_gauthenticator/master/screenshots/092443.png)
 
 iRedMail_Reset_2FA
 ------------
 I have added a Python GUI script to handle the issue of activation or deactivation when the phone is lost or the code is forgotten. With iRedMail_Reset_2FA folder.
-![2Steps](https://raw.github.com/k4t3pr0/twofactor_gauthenticator/master/screenshots/2fa.jpg)
+![2Steps](https://raw.github.com/skyalliance/twofactor_gauthenticator/master/screenshots/2fa.jpg)
  
 Installation
 ------------
 - Clone from github:
-    HOME_RC/plugins$ git clone [https://github.com/k4t3pr0/twofactor_gauthenticator.git](https://github.com/k4t3pr0/twofactor_gauthenticator.git)
+    HOME_RC/plugins$ git clone [https://github.com/skyalliance/twofactor_gauthenticator.git](https://github.com/skyalliance/twofactor_gauthenticator.git)
     
 - Activate the plugin into HOME_RC/config/config.inc.php:
     $config['plugins'] = array('twofactor_gauthenticator');
