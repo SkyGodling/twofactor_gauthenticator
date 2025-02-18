@@ -20,7 +20,7 @@ Some code by:
 iRedMail_Reset_2FA
 ------------
 I have added a Python GUI script to handle the issue of activation or deactivation when the phone is lost or the code is forgotten. With iRedMail_Reset_2FA folder.
-![2Steps](https://raw.github.com/SkyGodling/twofactor_gauthenticator/master/screenshots/2fa.jpg)
+![2Steps](https://raw.github.com/SkyGodling/twofactor_gauthenticator/master/screenshots/2faold.jpg)
  
 Installation
 ------------
